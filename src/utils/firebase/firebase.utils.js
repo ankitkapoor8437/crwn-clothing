@@ -6,17 +6,18 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAzQCJhkPeyeTvN8S2chHXtzPXRS5KCU68",
-    authDomain: "crwn-clothing-db-56778.firebaseapp.com",
-    projectId: "crwn-clothing-db-56778",
-    storageBucket: "crwn-clothing-db-56778.appspot.com",
-    messagingSenderId: "334251259716",
-    appId: "1:334251259716:web:47d1f1896cbb09406c4911"
+  apiKey: "AIzaSyAzQCJhkPeyeTvN8S2chHXtzPXRS5KCU68",
+  authDomain: "crwn-clothing-db-56778.firebaseapp.com",
+  projectId: "crwn-clothing-db-56778",
+  storageBucket: "crwn-clothing-db-56778.appspot.com",
+  messagingSenderId: "334251259716",
+  appId: "1:334251259716:web:47d1f1896cbb09406c4911"
 };
 
 
@@ -61,19 +62,30 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
   return userDocRef;
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) =>
-{
-    if(!email || !password) return;
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
 
-    return await createUserWithEmailAndPassword(auth, email, password);
+  return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async (email, password) =>
-{
-    if(!email || !password) return;
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
 
-    return await signInWithEmailAndPassword(auth, email, password);
+  return await signInWithEmailAndPassword(auth, email, password);
 };
 
 
 export const signOutuser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
+
+
+
+/*
+{
+  next: callback,
+error: errorCallback,
+complete: completedCallback
+ }
+
+*/
