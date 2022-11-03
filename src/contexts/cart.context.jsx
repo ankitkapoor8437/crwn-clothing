@@ -1,3 +1,4 @@
+//importing createcontext, usestate, useEffect
 import { createContext, useState, useEffect } from "react";
 
 //helper function to add items to cart
@@ -13,7 +14,6 @@ export const addCartItem = (cartItems, productToAdd) => {
                 : cartItem
         );
     }
-
     return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
 
@@ -39,8 +39,7 @@ const removeCartItem = (cartItems, cartItemToRemove) => {
 const clearCartItem = (cartItems, cartItemToClear) =>
     cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
 
-
-
+//creating Cartcontext
 export const CartContext = createContext({
     isCartOpen: false,
     setIsCartOpen: () => { },
@@ -52,13 +51,14 @@ export const CartContext = createContext({
     cartTotal: 0,
 });
 
-
+// Creating CartProvider
 export const CartProvider = ({ children }) => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [cartCount, setCartCount] = useState(0);
     const [cartTotal, setCartTotal] = useState(0);
 
+    //function to cartcount and carttotal using useEffect
     useEffect(() => {
         const newCartCount = cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0)
         setCartCount(newCartCount);
@@ -69,6 +69,7 @@ export const CartProvider = ({ children }) => {
         setCartTotal(newCartTotal);
     }, [cartItems]);
 
+    //functions related to add, remove and clear the cart
     const addItemToCart = (productToAdd) =>
         setCartItems(addCartItem(cartItems, productToAdd));
 
@@ -78,8 +79,7 @@ export const CartProvider = ({ children }) => {
     const clearItemFromCart = (cartItemToClear) =>
         setCartItems(clearCartItem(cartItems, cartItemToClear));
 
-
-
+    //fetching values of the created function 
     const value = {
         isCartOpen,
         setIsCartOpen,
