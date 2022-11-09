@@ -8,9 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-
 } from 'firebase/auth';
-
 import {
   getFirestore,
   doc,
@@ -19,21 +17,18 @@ import {
   collection,
   writeBatch,
   query,
-  getDocs
+  getDocs,
 } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAzQCJhkPeyeTvN8S2chHXtzPXRS5KCU68",
-  authDomain: "crwn-clothing-db-56778.firebaseapp.com",
-  projectId: "crwn-clothing-db-56778",
-  storageBucket: "crwn-clothing-db-56778.appspot.com",
-  messagingSenderId: "334251259716",
-  appId: "1:334251259716:web:47d1f1896cbb09406c4911"
+  apiKey: 'AIzaSyDDU4V-_QV3M8GyhC9SVieRTDM4dbiT0Yk',
+  authDomain: 'crwn-clothing-db-98d4d.firebaseapp.com',
+  projectId: 'crwn-clothing-db-98d4d',
+  storageBucket: 'crwn-clothing-db-98d4d.appspot.com',
+  messagingSenderId: '626766232035',
+  appId: '1:626766232035:web:506621582dab103a4d08d6',
 };
 
-
-
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
@@ -43,16 +38,19 @@ googleProvider.setCustomParameters({
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
-
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
 
-//created collection and collection reference
-export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd,
+  field
+) => {
   const collectionRef = collection(db, collectionKey);
-  //creating a  batch to create a transaction
   const batch = writeBatch(db);
 
   objectsToAdd.forEach((object) => {
@@ -61,13 +59,11 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
   });
 
   await batch.commit();
-  console.log('done')
-
+  console.log('done');
 };
 
-//Process to retrieve the categories from the database.
 export const getCategoriesAndDocuments = async () => {
-  const collectionRef = collection(db, "categories");
+  const collectionRef = collection(db, 'categories');
   const q = query(collectionRef);
 
   const querySnapshot = await getDocs(q);
@@ -78,15 +74,14 @@ export const getCategoriesAndDocuments = async () => {
   }, {});
 
   return categoryMap;
-}
+};
 
+export const createUserDocumentFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
+  if (!userAuth) return;
 
-
-
-
-
-
-export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
   const userDocRef = doc(db, 'users', userAuth.uid);
 
   const userSnapshot = await getDoc(userDocRef);
@@ -122,18 +117,7 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
+export const signOutUser = async () => await signOut(auth);
 
-export const signOutuser = async () => await signOut(auth);
-
-export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
-
-
-
-/*
-{
-  next: callback,
-error: errorCallback,
-complete: completedCallback
- }
-
-*/
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
